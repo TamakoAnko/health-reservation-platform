@@ -1,0 +1,84 @@
+# 服务器配置
+server:
+  port: 81
+
+spring:
+  datasource:
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:health}?characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 连接池配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    # 监控统计filters，sql防火墙'wall'
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+  jackson:
+    date-format: yyyy-MM-dd
+    time-zone: GMT+8
+
+  # redis配置
+  redis:
+    host: 127.0.0.1
+
+  freemarker:
+    # 模板后缀
+    suffix: .ftl
+    #文档类型
+    content-type: text/html
+    # 编码格式
+    charset: UTF-8
+    # 是否缓存
+    cache: false
+    # 模板加载路径
+    template-loader-path: classpath:/templates/
+    # freemarker输出路径
+    out_put_path: "D:/Java/IntelliJ IDEA 2024.3.1.1/IDEA Project/health_perent/health_mobile/src/main/resources/static/pages"
+
+mybatis:
+  # mybatis配置文件位置
+  config-location: classpath:mybatis/mybatis-config.xml
+  # sql映射文件位置
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.liusp.pojo,com.liusp.entity
+
+# dubbo配置
+dubbo:
+  # 应用名称
+  application:
+    name: health_service_provider
+  # 注册中心地址
+  registry:
+    address: zookeeper://127.0.0.1:2181
+  # 协议配置，默认端口20880
+  protocol:
+    port: 20888
+    name: dubbo
+  # 监控配置
+  monitor: registry
+
+# pagehelper配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+# 日志配置
+logging:
+  level:
+    com.liusp: debug

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liusp.dao.CheckItemDao">
+    <!--新增-->
+    <insert id="add" parameterType="com.liusp.pojo.CheckItem">
+        insert into t_checkitem (code,name,sex,age,price,type,remark,attention)
+        values
+        (#{code},#{name},#{sex},#{age},#{price},#{type},#{remark},#{attention})
+    </insert>
+
+    <!--分页查寻-->
+    <select id="selectByCondition" parameterType="string"
+            resultType="com.liusp.pojo.CheckItem">
+        select * from t_checkitem
+        <if test="value != null and value != ''">
+            where code = #{value} or name = #{value}
+        </if>
+    </select>
+
+    <!--删除-->
+    <delete id="deleteById" parameterType="int">
+        delete from t_checkitem where id = #{id}
+    </delete>
+    <!--根据检查项id查询中间关系表-->
+    <select id="findCountByCheckItemId" resultType="long" parameterType="int">
+        select count(*) from t_checkgroup_checkitem where checkitem_id = #{checkitem_id}
+    </select>
+
+    <!--编辑-->
+    <update id="edit" parameterType="com.liusp.pojo.CheckItem">
+        update t_checkitem
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="attention != null">
+                attention = #{attention},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="findById" parameterType="int" resultType="com.liusp.pojo.CheckItem">
+        select * from t_checkitem where id = #{id}
+    </select>
+
+
+    <select id="findAll" resultType="com.liusp.pojo.CheckItem">
+            select * from t_checkitem
+    </select>
+
+    <!--Mybatis的关联查询-->
+    <!--
+     根据检查组 id 查询关联的检查项列表
+     参数：id - 检查组主键
+     返回：CheckItem 列表，包含该检查组下关联的所有检查项
+ -->
+    <select id="findCheckItemById" resultType="com.liusp.pojo.CheckItem">
+        select * from t_checkitem where id in (select checkitem_id from t_checkgroup_checkitem where checkgroup_id=#{id})
+    </select>
+
+</mapper>

@@ -1,0 +1,44 @@
+server:
+  port: 91
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+
+spring:
+  application:
+    name: AIChatAssistant
+  ai:
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY:}
+      chat:
+        options:
+          model: qwen-plus  #qwen-plus
+      embedding:
+        options:
+          model: text-embedding-v3  #??????
+    vectorstore:
+      redis:
+        initialize-schema: true
+        index-name: custom-index
+        prefix: custom-predix
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: 6379
+      database: 0
+      connect-timeout: 10
+      timeout: 30
+
+  dubbo:
+    application:
+      name: AIChatAssistant
+    protocol:
+      name: dubbo
+      port: -1
+    registry:
+      address: zookeeper://${ZOOKEEPER_HOST:127.0.0.1}:2181
+    consumer:
+      check: false
+      timeout: 3000
